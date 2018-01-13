@@ -1,0 +1,17 @@
+{
+  "name": "aws-js-tests",
+  "version": "1.0.0",
+  "description": "Experiment with running tests as lambda functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "test-aws": "mocha --require ./aws-ui.js --ui aws-ui"
+  },
+  "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "request": "2.83.0",
+    "request-promise-native": "1.0.5",
+    "mocha": "^4.1.0"    
+  }
+}

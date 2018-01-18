@@ -4,14 +4,15 @@
   "description": "Experiment with running tests as lambda functions",
   "main": "index.js",
   "scripts": {
-    "test-local": "node local_run.js",
-    "test-aws": "node index.js"
+    "start-aws-tests": "node index_local.js",
+    "local-test": "node local_run.js"
   },
   "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "request": "2.83.0",
     "request-promise-native": "1.0.5",
-    "mocha": "^4.1.0"
+    "mocha": "^4.1.0",
+    "protractor": "^5.2.2"
   }
 }

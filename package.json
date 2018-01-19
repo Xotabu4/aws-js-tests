@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start-aws-tests": "node index_local.js",
-    "local-test": "node local_run.js"
+    "local-test": "protractor"
   },
   "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
   "license": "MIT",

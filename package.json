@@ -4,7 +4,7 @@
   "description": "Experiment with running tests as lambda functions",
   "main": "index.js",
   "scripts": {
-    "start-aws-tests": "node index_local.js",
+    "start-aws-tests": "node index_client.js",
     "local-test": "protractor"
   },
   "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",

@@ -31,19 +31,22 @@ for (let suite of mocha.suite.suites) {
     for (let test of suite.tests) {
         // to grep by full describe + it name
         let testName = suite.title + ' ' + test.title
-        
+
         testResps.push(request({
             url: 'https://jbmu0byt9f.execute-api.us-west-2.amazonaws.com/prod',
             qs: {
                 "testName": testName
             }
-        }))
+        }).catch(err => err))
         console.log(testName, ' is pushed to AWS lambda!')
     }
 }
 
 Promise.all(testResps).then(function (results) {
-    console.dir(results)
+    for (let result of results) {
+        console.log('##', result)
+        console.log('##########################')
+    }
     console.timeEnd('total')
 }, function (errors) {
     console.log('Oh no, got errors!')

@@ -7,12 +7,12 @@ exports.handler = function (event, context, callback) {
     global.AWS_LAMBDA_CONTEXT = context;
     process.exit = function () {
         console.log('exiting!')
-        var response = {
-            "statusCode": 200,
-            "body": global.RESULTS,
-            "isBase64Encoded": false
-        };
-        callback(null, response);
+        // var response = {
+        //     "statusCode": 200,
+        //     "body": global.RESULTS,
+        //     "isBase64Encoded": false
+        // };
+        callback(null, JSON.stringify(global.RESULTS));
     }
     let additionalConfig = {
         mochaOpts: {
@@ -28,7 +28,7 @@ exports.handler = function (event, context, callback) {
 function startProtractor(addtionalConfig) {
     // I will burn in hell for this
     require('fs').writeFileSync = function (filepath, json) {
-        global.RESULTS = json;
+        global.RESULTS = JSON.stringify(json)
     }
     //fs.writeFileSync(filepath, json);
     const Launcher = require("protractor/built/launcher");

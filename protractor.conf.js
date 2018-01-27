@@ -1,11 +1,12 @@
+
 let conf = {
     seleniumAddress: process.env.SELENOID_URL || 'http://ip-5236.sunline.net.ua:4444/wd/hub',
     baseUrl: 'http://www.protractortest.org/testapp/ng1/#/form',
-    specs: ['./test/*.js'],
+    specs: ['./tests/*.js'],
     SELENIUM_PROMISE_MANAGER: true,
     framework: 'mocha',
     multiCapabilities: [
-        { browserName: 'chrome', enableVNC: true },
+        { browserName: 'chrome', enableVNC: false },
     ],
     // afterLaunch: function (exitCode) {
     //     // Unfortunatelly protractor programmatic usage is really limited

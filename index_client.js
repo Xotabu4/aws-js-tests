@@ -16,7 +16,6 @@ function updateAWScodeAndRun() {
     //dynamically create test files and tests
     generateTests()
 
-
     var zipdir = require('zip-dir');
     let outputFile = '../aws-js-tests.zip'
     console.log('Starting compressing...', outputFile)
@@ -50,36 +49,24 @@ function updateAWScodeAndRun() {
             })
         }
     });
-    /*
-         var params = {
-      FunctionName: 'STRING_VALUE', //required 
-      DryRun: true || false,
-      Publish: true || false,
-      RevisionId: 'STRING_VALUE',
-      S3Bucket: 'STRING_VALUE',
-      S3Key: 'STRING_VALUE',
-      S3ObjectVersion: 'STRING_VALUE',
-      ZipFile: new Buffer('...') || 'STRING_VALUE' // Strings will be Base-64 encoded on your behalf 
-    };
-         */
 }
-updateAWScodeAndRun()
 
 /**
  * Just invoke lambda programmatically. sweeet
- * @param {*} task 
+ * @param {*} testName 
  */
-function invokeLambda(task) {
+function invokeLambda(testName) {
     let payload = {
         queryStringParameters: {
-            testName: task
+            testName: testName
         }
     }
 
     var params = {
         FunctionName: 'test',
         //InvocationType: 'Event',
-        Payload: JSON.stringify(payload)
+        Payload: JSON.stringify(payload),
+        LogType: 'Tail'
     };
 
     return new Promise(function (resolve, reject) {
@@ -123,12 +110,7 @@ function parseAndPushTests() {
             // to grep by full describe + it name
             let testName = suite.title + ' ' + test.title
             testResps.push(invokeLambda(testName).then((result) => {
-                try {
-                    console.log(JSON.parse(result))
-                } catch (err) {
-                    console.log(err)
-                }
-                console.log('##', result)
+                console.log('##', new Buffer(result.LogResult, 'base64').toString())
                 console.log('##########################')
             }, (err) => {
                 console.log('Oh no, got errors!')
@@ -189,7 +171,7 @@ function parseAndPushTests() {
 }
 
 
-function generateTests(test_files_number = 24) {
+function generateTests(test_files_number = 10) {
     console.log('Will be', test_files_number, 'files')
     // For testing purposes only
     // Automatically synchronically generating needed number of test files on config parsing
@@ -211,3 +193,7 @@ describe('SUITE ${index}', function () {
     }
     console.log('Generated', test_files_number, 'test files!')
 }
+
+
+//updateAWScodeAndRun()
+parseAndPushTests()

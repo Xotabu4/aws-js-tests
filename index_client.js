@@ -32,9 +32,11 @@ function updateAWScodeAndRun() {
             }
         }
     }, function (err, buffer) {
-        if (!err) {
-            console.log('Finished! Created: ', outputFile)
+        if (err) {
+            console.log('File not created! something went wrong')
+            throw err
         }
+        console.log('Finished! Created: ', outputFile)
         if (buffer) {
             console.log('Updating aws lambda code...')
             lambda.updateFunctionCode({
@@ -42,10 +44,10 @@ function updateAWScodeAndRun() {
                 Publish: true,
                 ZipFile: buffer
             }, function (err, data) {
-                    console.log(err)
-                    console.log('Updated!', data)
-                    console.log('Starting tests locally...')
-                    parseAndPushTests()
+                console.log(err)
+                console.log('Updated!', data)
+                console.log('Starting tests locally...')
+                parseAndPushTests()
             })
         }
     });
@@ -110,7 +112,12 @@ function parseAndPushTests() {
             // to grep by full describe + it name
             let testName = suite.title + ' ' + test.title
             testResps.push(invokeLambda(testName).then((result) => {
-                console.log('##', new Buffer(result.LogResult, 'base64').toString())
+                let logAsString = new Buffer(result.LogResult, 'base64').toString()
+                console.log('##', logAsString)
+                // Not safe! rewrite in case EMFILE errors!
+                fs.appendFile('./invoked_lambdas.log', logAsString, (err) => {
+                    if(err) console.log(err)
+                });
                 console.log('##########################')
             }, (err) => {
                 console.log('Oh no, got errors!')
@@ -158,8 +165,11 @@ function parseAndPushTests() {
             })
         })
     */
-
+    if (testResps.length < 1) {
+        throw new Error('testResponses are 0. Means noting executed. Maybe no tests were found?')
+    }
     Promise.all(testResps).then(function (results) {
+        console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         console.timeEnd('total')
     }, function (errors) {
         console.error('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
@@ -171,7 +181,7 @@ function parseAndPushTests() {
 }
 
 
-function generateTests(test_files_number = 10) {
+function generateTests(test_files_number = 5) {
     console.log('Will be', test_files_number, 'files')
     // For testing purposes only
     // Automatically synchronically generating needed number of test files on config parsing
@@ -181,7 +191,7 @@ function generateTests(test_files_number = 10) {
     let index = 0
     while (index < test_files_number) {
         let testFileTemplate =
-        `
+            `
 let TEST = require('../test').TEST
 describe('SUITE ${index}', function () {
     // Just using TEST function in test.js as test
@@ -194,6 +204,6 @@ describe('SUITE ${index}', function () {
     console.log('Generated', test_files_number, 'test files!')
 }
 
-
 //updateAWScodeAndRun()
-parseAndPushTests()
+
+//parseAndPushTests()

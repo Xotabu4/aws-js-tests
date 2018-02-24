@@ -113,6 +113,13 @@ function parseAndPushTests() {
             let testName = suite.title + ' ' + test.title
             testResps.push(invokeLambda(testName).then((result) => {
                 let logAsString = new Buffer(result.LogResult, 'base64').toString()
+                
+                let allureXMLAsString = JSON.parse(result.Payload).allure_xml
+                console.log('Allure XML results! ', allureXMLAsString)
+                // Not safe! rewrite in case EMFILE errors!
+                fs.appendFile(`./allure-results/${testName}-testsuite.xml`, allureXMLAsString, (err) => {
+                    if(err) console.log(err)
+                });
                 console.log('##', logAsString)
                 // Not safe! rewrite in case EMFILE errors!
                 fs.appendFile('./invoked_lambdas.log', logAsString, (err) => {
@@ -181,7 +188,7 @@ function parseAndPushTests() {
 }
 
 
-function generateTests(test_files_number = 5) {
+function generateTests(test_files_number = 10) {
     console.log('Will be', test_files_number, 'files')
     // For testing purposes only
     // Automatically synchronically generating needed number of test files on config parsing

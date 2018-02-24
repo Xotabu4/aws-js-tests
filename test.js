@@ -1,7 +1,7 @@
-var SLEEP_TIMEOUT = 500 // ms
+var SLEEP_TIMEOUT = 1 // ms
 
 function TEST() {
-    var counter = 0;
+    let counter = 0;
     browser.waitForAngularEnabled(false)
     browser.get('')
     
@@ -10,14 +10,13 @@ function TEST() {
      */
     function waitWithCounter() {
         counter = counter + 1
-        return protractor.ExpectedConditions.invisibilityOf($('body'))()
+        return protractor.ExpectedConditions.stalenessOf($('body'))()
     }
 
     console.time('waited for')
     return browser.wait(waitWithCounter, SLEEP_TIMEOUT).then(undefined, function (err) {
         console.timeEnd('waited for')
-        console.log('invisibility of body finished')
-        console.log('did ', counter, 'findElement+isDisplayed requests to selenoid server')
+        console.log('did', counter, 'requests to selenoid server')
     })
 }
 

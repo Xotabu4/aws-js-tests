@@ -11,6 +11,7 @@ let conf = {
     mochaOpts: {
         //grep: testName,
         timeout: 60000,
+        reporter: 'mocha-allure-reporter'
     },
     multiCapabilities: [
         {
@@ -27,6 +28,10 @@ let conf = {
 
     afterLaunch: function (exitCode) {
         console.timeEnd('protractorTime')
+        if (global.XML_RESULTS) {
+            console.log('ALLURE results added to global.XML_RESULTS !')
+            // console.log(global.XML_RESULTS)
+        }
         // Unfortunatelly protractor programmatic usage is really limited
         //global.AWS_LAMBDA_CALLBACK && global.AWS_LAMBDA_CALLBACK()
     }

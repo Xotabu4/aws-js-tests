@@ -12,7 +12,7 @@ exports.handler = function (event, context, callback) {
         //     "body": global.RESULTS,
         //     "isBase64Encoded": false
         // };
-        callback(null, JSON.stringify(global.RESULTS));
+        callback(null, { allure_xml: global.XML_RESULTS });
     };
     let additionalConfig = {
         mochaOpts: {

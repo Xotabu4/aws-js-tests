@@ -4,8 +4,9 @@
   "description": "Experiment with running tests as lambda functions",
   "main": "index.js",
   "scripts": {
-    "start-aws-tests": "node index_client.js",
-    "local-test": "protractor"
+    "lambda-test": "node index_client.js",
+    "local-test": "protractor",
+    "report": "allure generate --clean"
   },
   "author": "Oleksandr Khotemskyi <xotabu4@gmail.com>",
   "license": "MIT",
@@ -13,6 +14,9 @@
     "request": "2.83.0",
     "request-promise-native": "1.0.5",
     "mocha": "^4.1.0",
+    "mocha-allure-reporter": "^1.3.2",
+    "allure-js-commons": "../allure-js-commons",
+    "allure-commandline": "^2.5.0",
     "protractor": "^5.2.2",
     "aws-sdk": "^2.188.0",
     "zip-dir": "^1.0.2"
